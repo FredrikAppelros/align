@@ -20,8 +20,7 @@ Install align with ```python setup.py install```
 
 Usage
 -----
-```
-python
+```python
 >>> import numpy
 >>> import align
 >>> S = -numpy.ones((256, 256)) + 2 * numpy.identity(256)
