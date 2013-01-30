@@ -52,3 +52,10 @@ def align(a, b, d, ndarray[int, ndim=2, mode='c'] S not None, local=False):
 
     return (al.s, a1, a2)
 
+def alignment_to_string(al):
+    def conv(c):
+        if c:
+            return chr(c)
+        return '-'
+    return ''.join(map(conv, al))
+
