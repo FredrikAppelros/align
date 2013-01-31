@@ -85,6 +85,10 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, int d,
     // Backtrace through the matrix
     a1 = malloc((len_a + len_b) * sizeof(short));
     a2 = malloc((len_a + len_b) * sizeof(short));
+    if (a1 == NULL || a2 == NULL) {
+        exit(1);
+    }
+
     if (local) {
         i = max_i;
         j = max_j;

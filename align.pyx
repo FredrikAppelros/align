@@ -1,4 +1,4 @@
-from libc.stdlib cimport malloc
+from libc.stdlib cimport malloc, free
 from calign cimport align_t
 from calign cimport align as calign_
 from numpy cimport ndarray
@@ -26,15 +26,21 @@ def align(a, b, d, ndarray[int, ndim=2, mode='c'] S not None, local=False):
     cdef size_t len_b = len(b)
     cdef size_t len_S = len(S)
     cdef size_t i
+    cdef align_t al
     cdef short* ca = <short*> malloc(len_a * sizeof(short))
     cdef short* cb = <short*> malloc(len_b * sizeof(short))
-    cdef align_t al
+    if not ca or not cb:
+        raise MemoryError()
 
-    for i in range(len_a):
-        ca[i] = ord(a[i])
-    for i in range(len_b):
-        cb[i] = ord(b[i])
-    al = calign_(len_a, ca, len_b, cb, d, len_S, &S[0,0], local)
+    try:
+        for i in range(len_a):
+            ca[i] = ord(a[i])
+        for i in range(len_b):
+            cb[i] = ord(b[i])
+        al = calign_(len_a, ca, len_b, cb, d, len_S, &S[0,0], local)
+    finally:
+        free(ca)
+        free(cb)
 
     a1 = []
     a2 = []
@@ -49,6 +55,9 @@ def align(a, b, d, ndarray[int, ndim=2, mode='c'] S not None, local=False):
             a2.append(a2i)
         else:
             a2.append(None)
+
+    free(al.a1)
+    free(al.a2)
 
     return (al.s, a1, a2)
 
