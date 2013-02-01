@@ -11,7 +11,7 @@ implementation of both global and local sequence alignment. It is implemented in
 speed and wrapped with Cython to provide the ease of use of Python. The algorithms used
 are Needleman-Wunsch for global alignment and Smith-Waterman for local alignment.
 
-align uses a quadratic ```numpy.ndarray``` as scoring matrix which needs to be of dtype ```numpy.int32```.
+align uses a quadratic ```numpy.ndarray``` as scoring matrix which needs to be of dtype ```numpy.int16```.
 
 Installation
 ------------
