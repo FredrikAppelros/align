@@ -27,7 +27,7 @@ Returns
  * a2       - alignment of the second sequence
 
 */
-align_t align(size_t len_a, const short* a, size_t len_b, const short* b, int d, size_t len_S, const int* S, bool local)
+align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short d, size_t len_S, const short* S, bool local)
 {
     size_t len_al;
     size_t i;
@@ -36,11 +36,11 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, int d,
     size_t max_j = 0;
     size_t cnt1 = 0;
     size_t cnt2 = 0;
-    int match;
-    int delete;
-    int insert;
-    int max_val = 0;
-    int F[len_b + 1][len_a + 1];
+    short match;
+    short delete;
+    short insert;
+    short max_val = 0;
+    short F[len_b + 1][len_a + 1];
     short tmp;
     short* a1;
     short* a2;

@@ -3,7 +3,7 @@ from calign cimport align_t
 from calign cimport align as calign_
 from numpy cimport ndarray
 
-def align(a, b, d, ndarray[int, ndim=2, mode='c'] S not None, local=False):
+def align(a, b, d, ndarray[short, ndim=2, mode='c'] S not None, local=False):
     """
     Performs local or global sequence alignment.
 
