@@ -118,7 +118,7 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short 
 
     // Reverse the alignments
     len_al = cnt1;
-    for (i = 0; i <= len_al / 2; i++) {
+    for (i = 0; i < len_al / 2; i++) {
         tmp = a1[i];
         a1[i] = a1[len_al - (i + 1)];
         a1[len_al - (i + 1)] = tmp;
