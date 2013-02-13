@@ -65,7 +65,7 @@ def alignment_to_string(al, hex_=False):
     def conv(c):
         if c is not None:
             if hex_:
-                return '%x' % c
+                return '%02x' % c
             else:
                 return chr(c)
         return '-'
