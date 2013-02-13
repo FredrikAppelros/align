@@ -61,10 +61,13 @@ def align(a, b, d, ndarray[short, ndim=2, mode='c'] S not None, local=False):
 
     return (al.s, a1, a2)
 
-def alignment_to_string(al):
+def alignment_to_string(al, hex_=False):
     def conv(c):
         if c is not None:
-            return chr(c)
+            if hex_:
+                return '%x' % c
+            else:
+                return chr(c)
         return '-'
     return ''.join(map(conv, al))
 
