@@ -68,6 +68,10 @@ def alignment_to_string(al, hex_=False):
                 return '%02x' % c
             else:
                 return chr(c)
-        return '-'
+        else:
+            if hex_:
+                return '--'
+            else:
+                return '-'
     return ''.join(map(conv, al))
 
