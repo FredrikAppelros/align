@@ -106,12 +106,12 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short 
             i--;
             j--;
         } else if (i > 0 && F[i][j] == F[i-1][j] + d) {
-            a1[cnt1++] = -1;
+            a1[cnt1++] = 256;
             a2[cnt2++] = b[i-1];
             i--;
         } else {
             a1[cnt1++] = a[j-1];
-            a2[cnt2++] = -1;
+            a2[cnt2++] = 256;
             j--;
         }
     }

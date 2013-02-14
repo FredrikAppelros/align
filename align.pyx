@@ -34,36 +34,28 @@ def align(a, b, d, ndarray[short, ndim=2, mode='c'] S not None, local=False):
 
     try:
         for i in range(len_a):
-            ca[i] = ord(a[i])
+            ca[i] = a[i]
         for i in range(len_b):
-            cb[i] = ord(b[i])
+            cb[i] = b[i]
         al = calign_(len_a, ca, len_b, cb, d, len_S, &S[0,0], local)
     finally:
         free(ca)
         free(cb)
 
-    a1 = []
-    a2 = []
-    for i in range(al.len):
-        a1i = al.a1[i]
-        a2i = al.a2[i]
-        if a1i != -1:
-            a1.append(a1i)
-        else:
-            a1.append(None)
-        if a2i != -1:
-            a2.append(a2i)
-        else:
-            a2.append(None)
+    a1 = [al.a1[i] for i in range(al.len)]
+    a2 = [al.a2[i] for i in range(al.len)]
 
     free(al.a1)
     free(al.a2)
 
     return (al.s, a1, a2)
 
+def string_to_alignment(s):
+    return map(ord, s)
+
 def alignment_to_string(al, hex_=False):
     def conv(c):
-        if c is not None:
+        if c != 256:
             if hex_:
                 return '%02x' % c
             else:

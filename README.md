@@ -13,6 +13,11 @@ are Needleman-Wunsch for global alignment and Smith-Waterman for local alignment
 
 align uses a quadratic ```numpy.ndarray``` as scoring matrix which needs to be of dtype ```numpy.int16```.
 
+It also supports iterative alignments (aligning a sequence with another sequence that already
+contains gaps). To use this the scoring matrix needs to be of the shape (257, 257) with
+the last row and column being used to score matchings of the fixed gaps and the symbols
+of the alphabet.
+
 Installation
 ------------
 
@@ -25,7 +30,9 @@ Usage
 >>> import align
 >>> S = -numpy.ones((256, 256)) + 2 * numpy.identity(256)
 >>> S = S.astype(numpy.int32)
->>> (s, a1, a2) = align.align('AATGT', 'ATGAC', -2, S, local=True)
+>>> s1 = align.string_to_alignment('AATGT')
+>>> s2 = align.string_to_alignment('ATGAC')
+>>> (s, a1, a2) = align.align(s1, s2, -2, S, local=True)
 >>> print('%s\n%s\nScore: %d' % (align.alignment_to_string(a1), align.alignment_to_string(a2), s))
 ATG
 ATG
