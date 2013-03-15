@@ -3,17 +3,24 @@ from calign cimport align_t
 from calign cimport align as calign_
 from numpy cimport ndarray
 
-def align(a, b, d, ndarray[short, ndim=2, mode='c'] S not None, local=False):
+def align(a, b, d_a, d_b, ndarray[short, ndim=2, mode='c'] S not None, local=False, mutual=True):
     """
-    Performs local or global sequence alignment.
+    Performs sequence alignment. The alignment can either be global or
+    local in combination with either mutual or non-mutual.
+
+    Mutual alignment is sequence alignment where both sequences are
+    candidates for gap insertion whilst non-mutual alignment only allows
+    for gap insertion into the second sequence.
 
     Parameters
     ----------
      * a        - first sequence
      * b        - second sequence
-     * d        - gap penalty
+     * d_a      - gap penalty for the first sequence
+     * d_b      - gap penalty for the second sequence
      * S        - scoring matrix
      * local    - true for local alignment, false otherwise
+     * mutual   - true for mutual alignment, false otherwise
 
     Returns
     -------
@@ -37,7 +44,7 @@ def align(a, b, d, ndarray[short, ndim=2, mode='c'] S not None, local=False):
             ca[i] = a[i]
         for i in range(len_b):
             cb[i] = b[i]
-        al = calign_(len_a, ca, len_b, cb, d, len_S, &S[0,0], local)
+        al = calign_(len_a, ca, len_b, cb, d_a, d_b, len_S, &S[0,0], local, mutual)
     finally:
         free(ca)
         free(cb)

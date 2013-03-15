@@ -6,7 +6,12 @@
 
 /**
 
-Performs local or global sequence alignment.
+Performs sequence alignment. The alignment can either be global or
+local in combination with either mutual or non-mutual.
+
+Mutual alignment is sequence alignment where both sequences are
+candidates for gap insertion whilst non-mutual alignment only allows
+for gap insertion into the second sequence.
 
 Parameters
 ----------
@@ -14,10 +19,12 @@ Parameters
  * a        - first sequence
  * len_b    - length of the second sequence
  * b        - second sequence
- * d        - gap penalty
+ * d_a      - gap penalty for the first sequence
+ * d_b      - gap penalty for the second sequence
  * len_S    - length of alphabet
  * S        - scoring matrix
  * local    - true for local alignment, false otherwise
+ * mutual   - true for mutual alignment, false otherwise
 
 Returns
 -------
@@ -27,7 +34,7 @@ Returns
  * a2       - alignment of the second sequence
 
 */
-align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short d, size_t len_S, const short* S, bool local)
+align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short d_a, short d_b, size_t len_S, const short* S, bool local, bool mutual)
 {
     size_t len_al;
     size_t i;
@@ -49,10 +56,10 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short 
     // Initialize the matrix
     if (!local) {
         for (i = 0; i < len_a + 1; i++) {
-            F[0][i] = d * i;
+            F[0][i] = d_b * i;
         }
         for (i = 0; i < len_b + 1; i++) {
-            F[i][0] = d * i;
+            F[i][0] = d_a * i;
         }
     } else {
         for (i = 0; i < len_a + 1; i++) {
@@ -64,20 +71,41 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short 
     }
 
     // Fill the matrix
-    for (i = 1; i < len_b + 1; i++) {
-        for (j = 1; j < len_a + 1; j++) {
-            match = F[i-1][j-1] + S[len_S * a[j-1] + b[i-1]];
-            delete = F[i-1][j] + d;
-            insert = F[i][j-1] + d;
-            F[i][j] = max(match, delete);
-            F[i][j] = max(F[i][j], insert);
-            if (local) {
-                F[i][j] = max(F[i][j], 0);
+    if (mutual) {
+        for (i = 1; i < len_b + 1; i++) {
+            for (j = 1; j < len_a + 1; j++) {
+                match = F[i-1][j-1] + S[len_S * a[j-1] + b[i-1]];
+                delete = F[i-1][j] + d_a;
+                insert = F[i][j-1] + d_b;
+                F[i][j] = max(match, delete);
+                F[i][j] = max(F[i][j], insert);
+                if (local) {
+                    F[i][j] = max(F[i][j], 0);
+                }
+                if (F[i][j] > max_val) {
+                    max_val = F[i][j];
+                    max_i = i;
+                    max_j = j;
+                }
             }
-            if (F[i][j] > max_val) {
-                max_val = F[i][j];
-                max_i = i;
-                max_j = j;
+        }
+    } else {
+        for (i = 1; i < len_b + 1; i++) {
+            F[i][i] = F[i-1][i-1] + S[len_S * a[i-1] + b[i-1]];
+        }
+        for (i = 1; i < len_b + 1; i++) {
+            for (j = i + 1; j < len_a + 1; j++) {
+                match = F[i-1][j-1] + S[len_S * a[j-1] + b[i-1]];
+                insert = F[i][j-1] + d_b;
+                F[i][j] = max(match, insert);
+                if (local) {
+                    F[i][j] = max(F[i][j], 0);
+                }
+                if (F[i][j] > max_val) {
+                    max_val = F[i][j];
+                    max_i = i;
+                    max_j = j;
+                }
             }
         }
     }
@@ -105,14 +133,14 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short 
             a2[cnt2++] = b[i-1];
             i--;
             j--;
-        } else if (i > 0 && F[i][j] == F[i-1][j] + d) {
-            a1[cnt1++] = 256;
-            a2[cnt2++] = b[i-1];
-            i--;
-        } else {
+        } else if (!mutual || j > 0 && F[i][j] == F[i][j-1] + d_b) {
             a1[cnt1++] = a[j-1];
             a2[cnt2++] = 256;
             j--;
+        } else {
+            a1[cnt1++] = 256;
+            a2[cnt2++] = b[i-1];
+            i--;
         }
     }
 

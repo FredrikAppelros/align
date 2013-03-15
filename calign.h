@@ -11,7 +11,7 @@ typedef struct align_t {
     short* a2;
 } align_t;
 
-align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short d, size_t len_S, const short* S, bool local);
+align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short d_a, short d_b, size_t len_S, const short* S, bool local, bool mutual);
 
 #endif
 
