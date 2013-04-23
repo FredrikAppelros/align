@@ -34,7 +34,7 @@ Usage
 >>> import numpy
 >>> import align
 >>> S = -numpy.ones((256, 256)) + 2 * numpy.identity(256)
->>> S = S.astype(numpy.int32)
+>>> S = S.astype(numpy.int16)
 >>> s1 = align.string_to_alignment('AATGT')
 >>> s2 = align.string_to_alignment('ATGAC')
 >>> (s, a1, a2) = align.align(s1, s2, -2, -2, S, local=True)
