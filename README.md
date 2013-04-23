@@ -16,7 +16,7 @@ the second sequence.
 It is implemented in C for speed and wrapped with Cython to provide the ease of use of Python.
 The algorithms used are Needleman-Wunsch for global alignment and Smith-Waterman for local alignment.
 
-align uses a quadratic ```numpy.ndarray``` as scoring matrix which needs to be of dtype ```numpy.int16```.
+align uses a symmetric ```numpy.ndarray``` as scoring matrix which needs to be of dtype ```numpy.int16```.
 
 It also supports iterative alignments (aligning a sequence with another sequence that already
 contains gaps). To use this the scoring matrix needs to be of the shape (257, 257) with
