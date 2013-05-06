@@ -80,7 +80,7 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short 
 
     // Fill the matrix
     for (i = 1; i < len_b + 1; i++) {
-        for (j = 1; j < len_a + 1; j++) {
+        for (j = 1 + (mutual ? 0 : i); j < len_a + 1; j++) {
             match = F[i-1][j-1] + S[len_S * a[j-1] + b[i-1]];
             delete = F[i-1][j] + d_a;
             insert = F[i][j-1] + d_b;
