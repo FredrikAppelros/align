@@ -12,6 +12,9 @@ def align(a, b, d_a, d_b, ndarray[short, ndim=2, mode='c'] S not None, local=Fal
     candidates for gap insertion whilst non-mutual alignment only allows
     for gap insertion into the second sequence.
 
+    NOTE: In non-mutual alignment the longest sequence needs to be
+    supplied in sequence a.
+
     Parameters
     ----------
      * a        - first sequence
@@ -38,6 +41,9 @@ def align(a, b, d_a, d_b, ndarray[short, ndim=2, mode='c'] S not None, local=Fal
     cdef short* cb = <short*> malloc(len_b * sizeof(short))
     if not ca or not cb:
         raise MemoryError()
+    if not mutual:
+        assert len_b <= len_a, ("The longest sequence needs to be "
+        "supplied in parameter a for non-mutual alignment.")
 
     try:
         for i in range(len_a):

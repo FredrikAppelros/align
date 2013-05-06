@@ -13,6 +13,9 @@ Mutual alignment is sequence alignment where both sequences are
 candidates for gap insertion whilst non-mutual alignment only allows
 for gap insertion into the second sequence.
 
+NOTE: In non-mutual alignment the longest sequence needs to be supplied
+in sequence a.
+
 Parameters
 ----------
  * len_a    - length of the first sequence
@@ -69,43 +72,29 @@ align_t align(size_t len_a, const short* a, size_t len_b, const short* b, short 
             F[i][0] = 0;
         }
     }
-
-    // Fill the matrix
-    if (mutual) {
-        for (i = 1; i < len_b + 1; i++) {
-            for (j = 1; j < len_a + 1; j++) {
-                match = F[i-1][j-1] + S[len_S * a[j-1] + b[i-1]];
-                delete = F[i-1][j] + d_a;
-                insert = F[i][j-1] + d_b;
-                F[i][j] = max(match, delete);
-                F[i][j] = max(F[i][j], insert);
-                if (local) {
-                    F[i][j] = max(F[i][j], 0);
-                }
-                if (F[i][j] > max_val) {
-                    max_val = F[i][j];
-                    max_i = i;
-                    max_j = j;
-                }
-            }
-        }
-    } else {
+    if (!mutual) {
         for (i = 1; i < len_b + 1; i++) {
             F[i][i] = F[i-1][i-1] + S[len_S * a[i-1] + b[i-1]];
         }
-        for (i = 1; i < len_b + 1; i++) {
-            for (j = i + 1; j < len_a + 1; j++) {
-                match = F[i-1][j-1] + S[len_S * a[j-1] + b[i-1]];
-                insert = F[i][j-1] + d_b;
-                F[i][j] = max(match, insert);
-                if (local) {
-                    F[i][j] = max(F[i][j], 0);
-                }
-                if (F[i][j] > max_val) {
-                    max_val = F[i][j];
-                    max_i = i;
-                    max_j = j;
-                }
+    }
+
+    // Fill the matrix
+    for (i = 1; i < len_b + 1; i++) {
+        for (j = 1; j < len_a + 1; j++) {
+            match = F[i-1][j-1] + S[len_S * a[j-1] + b[i-1]];
+            delete = F[i-1][j] + d_a;
+            insert = F[i][j-1] + d_b;
+            F[i][j] = max(match, insert);
+            if (mutual) {
+                F[i][j] = max(F[i][j], delete);
+            }
+            if (local) {
+                F[i][j] = max(F[i][j], 0);
+            }
+            if (F[i][j] > max_val) {
+                max_val = F[i][j];
+                max_i = i;
+                max_j = j;
             }
         }
     }
