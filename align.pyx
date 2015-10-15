@@ -64,7 +64,7 @@ def align(a, b, d_a, d_b, ndarray[short, ndim=2, mode='c'] S not None, local=Fal
     return (al.s, a1, a2)
 
 def string_to_alignment(s):
-    return map(ord, s)
+    return list(map(ord, s))
 
 def alignment_to_string(al, hex_=False):
     def conv(c):
@@ -78,5 +78,5 @@ def alignment_to_string(al, hex_=False):
                 return '--'
             else:
                 return '-'
-    return ''.join(map(conv, al))
+    return ''.join(list(map(conv, al)))
 
